@@ -15,6 +15,8 @@ Serial port parameters:
 - No parity
 - No flow control
 
+__PWM output is set to NUCELO pins: D3,D5,D6__
+
 ## List of commands ##
 
 - on # -> Turns LED # on (e.x. on 1)
