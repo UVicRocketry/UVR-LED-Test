@@ -20,7 +20,6 @@
  */
 
 #include "mbed.h"
-#include <utility>
 
 #ifndef PWMDRIVER_H
 #define PWMDRIVER_H
