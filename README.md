@@ -5,7 +5,7 @@ Written for UVic Rocketry
 
 ## Setup ##
 
-Compile with GCC ARM Embedded. Flash the .bin to the Nucelo using ST-Link.
+Compile .bin from source (using GCC ARM Embedded) or download release. Flash the .bin to the Nucelo using ST-Link.
 
 Send commands via serial port terminal. Enter “help” for a list of commands. Enter “status” for the current state of all PWM pins.
 
