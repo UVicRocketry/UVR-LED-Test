@@ -1,5 +1,5 @@
 # LED-Serial-Test #
-NUCLEO-L053R8 serial test program for PWM-driven LEDs
+NUCLEO-L053R8 serial test program for PWM-driven UV LEDs
 
 Written for UVic Rocketry
 
