@@ -1,11 +1,11 @@
 # LED-Serial-Test #
-NUCELO-L053R8 serial test program for PWM-driven LEDs
+NUCLEO-L053R8 serial test program for PWM-driven LEDs
 
 Written for UVic Rocketry
 
 ## Setup ##
 
-Compile .bin from source (using GCC ARM Embedded) or download release. Flash the .bin to the Nucelo using ST-Link.
+Compile .bin from source (using GCC ARM Embedded) or download release. Flash the .bin to the NUCLEO using ST-Link.
 
 Send commands via serial port terminal. Enter “help” for a list of commands. Enter “status” for the current state of all PWM pins.
 
@@ -15,7 +15,7 @@ Serial port parameters:
 - No parity
 - No flow control
 
-__PWM output is set to NUCELO pins: D3,D5,D6__
+__PWM output is set to NUCLEO pins: D3,D5,D6__
 
 ## List of commands ##
 
