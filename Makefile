@@ -39,7 +39,8 @@ VPATH = ..
 ###############################################################################
 # Project settings
 
-PROJECT := LED_test_NUCLEO_L053R8
+PROJECT := UVR-LED-Test
+
 
 # Project settings
 ###############################################################################
@@ -51,19 +52,22 @@ OBJECTS += main.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/PeripheralPins.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/analogin_api.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/analogout_api.o
+ SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/can_api.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/cmsis_nvic.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/gpio_api.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/gpio_irq_api.o
+ SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/gpio_irq_device.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/hal_tick_16b.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/hal_tick_32b.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/i2c_api.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/lp_ticker.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/mbed_board.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/mbed_overrides.o
+ SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/mbed_retarget.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/pinmap.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/port_api.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/pwmout_api.o
- SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/retarget.o
+ SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/pwmout_device.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/rtc_api.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/serial_api.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/sleep.o
@@ -140,6 +144,12 @@ OBJECTS += main.o
 
 INCLUDE_PATHS += -I../
 INCLUDE_PATHS += -I../.
+INCLUDE_PATHS += -I../ADXL377
+INCLUDE_PATHS += -I../BMP280
+INCLUDE_PATHS += -I../BNO055
+INCLUDE_PATHS += -I../W25Q128
+INCLUDE_PATHS += -I../transmit_serial
+INCLUDE_PATHS += -I../PwmDriver
 INCLUDE_PATHS += -I../mbed/.
 INCLUDE_PATHS += -I../mbed/TARGET_NUCLEO_L053R8
 INCLUDE_PATHS += -I../mbed/TARGET_NUCLEO_L053R8/TARGET_STM
@@ -154,7 +164,7 @@ INCLUDE_PATHS += -I../mbed/platform
 
 LIBRARY_PATHS := -L../mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM 
 LIBRARIES := -l:libmbed.a 
-LINKER_SCRIPT := ../mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/STM32L053X8.ld
+LINKER_SCRIPT ?= ../mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/STM32L053X8.ld
 
 # Objects and Paths
 ###############################################################################
@@ -162,9 +172,10 @@ LINKER_SCRIPT := ../mbed/TARGET_NUCLEO_L053R8/TOOLCHAIN_GCC_ARM/STM32L053X8.ld
 
 AS      = 'arm-none-eabi-gcc' '-x' 'assembler-with-cpp' '-c' '-Wall' '-Wextra' '-Wno-unused-parameter' '-Wno-missing-field-initializers' '-fmessage-length=0' '-fno-exceptions' '-fno-builtin' '-ffunction-sections' '-fdata-sections' '-funsigned-char' '-MMD' '-fno-delete-null-pointer-checks' '-fomit-frame-pointer' '-Os' '-DMBED_RTOS_SINGLE_THREAD' '-mcpu=cortex-m0plus' '-mthumb'
 CC      = 'arm-none-eabi-gcc' '-std=gnu99' '-c' '-Wall' '-Wextra' '-Wno-unused-parameter' '-Wno-missing-field-initializers' '-fmessage-length=0' '-fno-exceptions' '-fno-builtin' '-ffunction-sections' '-fdata-sections' '-funsigned-char' '-MMD' '-fno-delete-null-pointer-checks' '-fomit-frame-pointer' '-Os' '-DMBED_RTOS_SINGLE_THREAD' '-mcpu=cortex-m0plus' '-mthumb'
-CPP     = 'arm-none-eabi-g++' '-std=c++14' '-fno-rtti' '-Wvla' '-c' '-Wall' '-Wextra' '-Wno-unused-parameter' '-Wno-missing-field-initializers' '-fmessage-length=0' '-fno-exceptions' '-fno-builtin' '-ffunction-sections' '-fdata-sections' '-funsigned-char' '-MMD' '-fno-delete-null-pointer-checks' '-fomit-frame-pointer' '-Os' '-DMBED_RTOS_SINGLE_THREAD' '-mcpu=cortex-m0plus' '-mthumb'
-LD      = 'arm-none-eabi-gcc' '-Wl,--gc-sections' '-Wl,--wrap,main' '-Wl,--wrap,exit' '-Wl,--wrap,atexit' '--specs=nano.specs' '-mcpu=cortex-m0plus' '-mthumb'
+CPP     = 'arm-none-eabi-g++' '-std=gnu++98' '-fno-rtti' '-Wvla' '-c' '-Wall' '-Wextra' '-Wno-unused-parameter' '-Wno-missing-field-initializers' '-fmessage-length=0' '-fno-exceptions' '-fno-builtin' '-ffunction-sections' '-fdata-sections' '-funsigned-char' '-MMD' '-fno-delete-null-pointer-checks' '-fomit-frame-pointer' '-Os' '-DMBED_RTOS_SINGLE_THREAD' '-mcpu=cortex-m0plus' '-mthumb'
+LD      = 'arm-none-eabi-gcc'
 ELF2BIN = 'arm-none-eabi-objcopy'
+PREPROC = 'arm-none-eabi-cpp' '-E' '-P' '-Wl,--gc-sections' '-Wl,--wrap,main' '-Wl,--wrap,exit' '-Wl,--wrap,atexit' '--specs=nano.specs' '-mcpu=cortex-m0plus' '-mthumb'
 
 
 C_FLAGS += -std=gnu99
@@ -179,6 +190,7 @@ C_FLAGS += -DDEVICE_RTC=1
 C_FLAGS += -DTOOLCHAIN_object
 C_FLAGS += -DDEVICE_SERIAL_ASYNCH=1
 C_FLAGS += -D__CMSIS_RTOS
+C_FLAGS += -DMBED_BUILD_TIMESTAMP=1494195440.41
 C_FLAGS += -DTOOLCHAIN_GCC
 C_FLAGS += -DTARGET_STM32L0
 C_FLAGS += -DTARGET_CORTEX_M
@@ -208,7 +220,6 @@ C_FLAGS += -DDEVICE_SPISLAVE=1
 C_FLAGS += -DDEVICE_ANALOGIN=1
 C_FLAGS += -DDEVICE_PWMOUT=1
 C_FLAGS += -DTARGET_LIKE_CORTEX_M0
-C_FLAGS += -DMBED_BUILD_TIMESTAMP=1489546826.8
 C_FLAGS += -include
 C_FLAGS += mbed_config.h
 
@@ -226,6 +237,7 @@ CXX_FLAGS += -DDEVICE_RTC=1
 CXX_FLAGS += -DTOOLCHAIN_object
 CXX_FLAGS += -DDEVICE_SERIAL_ASYNCH=1
 CXX_FLAGS += -D__CMSIS_RTOS
+CXX_FLAGS += -DMBED_BUILD_TIMESTAMP=1494195440.41
 CXX_FLAGS += -DTOOLCHAIN_GCC
 CXX_FLAGS += -DTARGET_STM32L0
 CXX_FLAGS += -DTARGET_CORTEX_M
@@ -255,7 +267,6 @@ CXX_FLAGS += -DDEVICE_SPISLAVE=1
 CXX_FLAGS += -DDEVICE_ANALOGIN=1
 CXX_FLAGS += -DDEVICE_PWMOUT=1
 CXX_FLAGS += -DTARGET_LIKE_CORTEX_M0
-CXX_FLAGS += -DMBED_BUILD_TIMESTAMP=1489546826.8
 CXX_FLAGS += -include
 CXX_FLAGS += mbed_config.h
 
@@ -267,15 +278,8 @@ ASM_FLAGS += -D__CORTEX_M0PLUS
 ASM_FLAGS += -DARM_MATH_CM0PLUS
 
 
-LD_FLAGS :=-Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,exit -Wl,--wrap,atexit -mcpu=cortex-m0plus -mthumb -u _printf_float
-
-LD_SYS_LIBS += -lstdc++
-LD_SYS_LIBS += -lsupc++
-LD_SYS_LIBS += -lm
-LD_SYS_LIBS += -lc
-LD_SYS_LIBS += -lgcc
-LD_SYS_LIBS += -lnosys
-
+LD_FLAGS :=-Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,exit -Wl,--wrap,atexit --specs=nano.specs -mcpu=cortex-m0plus -mthumb 
+LD_SYS_LIBS :=-Wl,--start-group -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys -Wl,--end-group
 
 # Tools and Flags
 ###############################################################################
@@ -313,7 +317,12 @@ all: $(PROJECT).bin $(PROJECT).hex size
 	@$(CPP) $(CXX_FLAGS) $(INCLUDE_PATHS) -o $@ $<
 
 
-$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS) $(LINKER_SCRIPT)
+$(PROJECT).link_script.ld: $(LINKER_SCRIPT)
+	@$(PREPROC) $< -o $@
+
+
+
+$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS) $(PROJECT).link_script.ld 
 	+@echo "link: $(notdir $@)"
 	@$(LD) $(LD_FLAGS) -T $(filter %.ld, $^) $(LIBRARY_PATHS) --output $@ $(filter %.o, $^) $(LIBRARIES) $(LD_SYS_LIBS)
 
