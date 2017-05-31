@@ -3,6 +3,8 @@ NUCLEO-L053R8 serial test program for PWM-driven UV LEDs
 
 Written for UVic Rocketry
 
+![alt text](http://i.imgur.com/GBirNXG.jpg)
+
 ## Setup ##
 
 Compile .bin from source (using GCC ARM Embedded) or download release. Flash the .bin to the NUCLEO using ST-Link.
