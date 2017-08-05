@@ -278,7 +278,7 @@ ASM_FLAGS += -D__CORTEX_M0PLUS
 ASM_FLAGS += -DARM_MATH_CM0PLUS
 
 
-LD_FLAGS :=-Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,exit -Wl,--wrap,atexit --specs=nano.specs -mcpu=cortex-m0plus -mthumb 
+LD_FLAGS :=-Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,exit -Wl,--wrap,atexit --specs=nano.specs -mcpu=cortex-m0plus -mthumb -u _printf_float
 LD_SYS_LIBS :=-Wl,--start-group -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys -Wl,--end-group
 
 # Tools and Flags

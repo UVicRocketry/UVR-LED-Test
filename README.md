@@ -1,5 +1,5 @@
 # LED-Serial-Test #
-NUCLEO-L053R8 serial test program for PWM-driven UV LEDs
+NUCLEO-L053R8 test program for payload UV experiment.
 
 Written for UVic Rocketry
 
@@ -9,7 +9,9 @@ Written for UVic Rocketry
 
 Compile .bin from source (using GCC ARM Embedded) or download release. Flash the .bin to the NUCLEO using ST-Link.
 
-Send commands via serial port terminal. Enter “help” for a list of commands. Enter “status” for the current state of all PWM pins.
+Send commands via serial port terminal. All commands must be terminated with newline character.
+
+Enter “help” for a list of commands. Enter “status” for the current state of all PWM pins.
 
 Serial port parameters: 
 - Baud rate 9600.

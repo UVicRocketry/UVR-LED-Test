@@ -2,8 +2,8 @@
  *	LED serial test
  *
  *	@author	 Andres Martinez and Jordan Patterson
- *	@version 0.9b
- *	@date	 14-Mar-2017
+ *	@version 1.0a
+ *	@date	 4-Aug-2017
  *
  *	Serial input program for STM Nucleo PWM-driven LEDs
  *
@@ -23,8 +23,10 @@
 
 Serial pc(SERIAL_TX, SERIAL_RX);
 
-//specify # of leds and their pin designations here
-std::array<PwmDriver,3> leds{PwmDriver(D3),PwmDriver(D5),PwmDriver(D6)};
+// UV led array
+std::array<PwmDriver,3> leds{PwmDriver(PB_3),PwmDriver(PB_4),PwmDriver(PB_10)};
+// UV diode voltage-regulator ENABLE signal
+DigitalOut voltage_reg_en(PA_10);
 
 void print_help()
 {
@@ -89,6 +91,8 @@ int main()
 	print_status();
 	print_help();
 
+	voltage_reg_en = 1;
+	
 	while(1) {
 		//iostreams and strings avoided
 		char line[128];
@@ -197,8 +201,9 @@ int main()
 		{
 			pc.printf("Deactivating LEDs and killing program...\n");
 			all_off();
+			voltage_reg_en = 0;
 			pc.printf("\n\n**************PROGRAM TERMINATED**************");
-			return(0);
+			return 0;
 		}
 
 		else
@@ -213,6 +218,7 @@ int main()
 			{
 				pc.printf("FATAL ERROR: LED at pin %d not turned off successfully! Disconnect power!\n",led.get_pin());
 				all_off();
+				voltage_reg_en = 0;
 				return -1;
 			}
 		}
