@@ -1,7 +1,5 @@
 # LED-Serial-Test #
-NUCLEO-L053R8 test program for payload UV experiment.
-
-Written for UVic Rocketry
+STM32 based system for UV diode control over serial. Used in UVic Rocketry's UV-sterilization lab tests.
 
 ![alt text](http://i.imgur.com/GBirNXG.jpg)
 
