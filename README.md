@@ -1,4 +1,5 @@
-# LED-Serial-Test #
+# UVR-LED-Test #
+
 STM32 based system for UV diode control over serial. Used in UVic Rocketry's UV-sterilization lab tests.
 
 ![alt text](http://i.imgur.com/GBirNXG.jpg)
